@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: alwx/actions-test@master
-        id: my_step_id
+      - uses: rasaHQ/issue-prioritizer@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           column_id: 8413302
