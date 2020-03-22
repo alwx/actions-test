@@ -17,6 +17,7 @@ jobs:
           archived_state: all
           per_page: 100
           page: 1
+          order: priority:important,priority:high,priority.medium,priority.low
       - name: Print outputs
         run: |
           echo "yay"
