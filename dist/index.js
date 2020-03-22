@@ -152,7 +152,7 @@ function moveCard(cards, index) {
 
 function sortCardLabels(labels) {
   return _.sortBy(labels, label => {
-    const index = labels.indexOf(label);
+    const index = order.indexOf(label);
     if (index >= 0) {
       return index;
     }
