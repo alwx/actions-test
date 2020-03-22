@@ -16,33 +16,30 @@ const inputs = {
   page,
 };
 
-async function octionRequest(
-  token,
-  method,
-  path,
-  previews,
-  inputs
-) {
+async function performRequest({token, path, inputs}) {
   const requestWithAuth = request.defaults({
     headers: {
       authorization: `Bearer ${token}`
     },
     mediaType: {
-      previews
+      previews: ["inertia"]
     }
   });
-  return await requestWithAuth(`${method} ${path}`, inputs);
+  return await requestWithAuth(path, inputs);
 }
 
-octionRequest(token,
-  "get",
-  "/projects/columns/{column_id}/cards",
-  ["inertia-preview"],
-  _.omit(inputs, ["token", "file_output", "custom_outputs"])
-).then(result => {
-  console.log("ALWX RESULT", result);
-})
-  .catch(error => {
-    console.log("error", error);
+function getCards() {
+  performRequest({
+    token,
+    path: "GET /projects/columns/{column_id}/cards",
+    inputs: _.omit(inputs, ["token"]),
+  }).then(result => {
+    if (result && result['data']) {
+      console.log(result['data']);
+    }
+  }).catch(error => {
     core.setFailed(error.message);
   });
+}
+
+getCards();
