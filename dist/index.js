@@ -146,8 +146,9 @@ function getIssueForCard(card) {
 
 function moveCard(cards, index) {
   const card = cards[index];
+  console.log(cards);
 
-  performRequest({
+  /*performRequest({
     token,
     path: `POST /projects/columns/cards/{card_id}/moves`,
     inputs: {
@@ -163,7 +164,7 @@ function moveCard(cards, index) {
     }
   }).catch(error => {
     core.setFailed(error.message);
-  });
+  });*/
 }
 
 function rearrangeCards() {
