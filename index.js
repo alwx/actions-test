@@ -38,7 +38,23 @@ function getIssueForCard(card) {
 }
 
 function moveCards(cards) {
-  console.log(cards.map(card => _.pick(card, ['content_url', 'labels'])));
+  const promises = cards.map(card => {
+    return performRequest({
+      token,
+      path: `POST /projects/columns/cards/{card_id}/moves`,
+      inputs: {
+        card_id: card.id,
+        position: 'bottom',
+        column_id: column_id,
+      }
+    })
+  });
+
+  Promise.all(promises).then(result => {
+    console.log(result);
+  }).catch(error => {
+    core.setFailed(error.message);
+  });
 }
 
 function getCards() {
@@ -62,7 +78,7 @@ function getCards() {
           if (card.labels.length > 0) {
             return order.indexOf(card.labels[0])
           } else {
-            return -1;
+            return order.length;
           }
         }));
       }).catch(error => {
