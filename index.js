@@ -38,7 +38,7 @@ function getIssueForCard(card) {
 }
 
 function moveCards(cards) {
-  console.log(cards);
+  console.log(cards.map(card => _.pick(card, ['content_url', 'labels'])));
 }
 
 function getCards() {
@@ -59,7 +59,7 @@ function getCards() {
 
       Promise.all(promises).then(cards => {
         moveCards(_.sortBy(cards, (v) => {
-          if (len(v.labels) > 0) {
+          if (length(v.labels) > 0) {
             return order.indexOf(v.labels[0])
           } else {
             return -1;
