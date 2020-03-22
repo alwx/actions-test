@@ -8,10 +8,6 @@ const archived_state = core.getInput("archived_state");
 const per_page = core.getInput("per_page");
 const page = core.getInput("page");
 
-const previews = [
-  "inertia",
-];
-
 const inputs = {
   token,
   column_id,
@@ -41,7 +37,7 @@ async function octionRequest(
 octionRequest(token,
   "get",
   "/projects/columns/{column_id}/cards",
-  previews,
+  ["inertia-preview"],
   _.omit(inputs, ["token", "file_output", "custom_outputs"])
 ).then(result => {
   console.log("ALWX RESULT", result);
