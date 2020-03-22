@@ -102,19 +102,8 @@ const core = __webpack_require__(133);
 const {request} = __webpack_require__(278);
 
 const token = core.getInput("token");
-const column_id = core.getInput("column_id");
-const archived_state = core.getInput("archived_state");
-const per_page = core.getInput("per_page");
-const page = core.getInput("page");
+const column_id = parseInt(core.getInput("column_id"));
 const order = core.getInput("order").split(',');
-
-const inputs = {
-  token,
-  column_id,
-  archived_state,
-  per_page,
-  page,
-};
 
 async function performRequest({token, path, inputs}) {
   const requestWithAuth = request.defaults({
@@ -132,16 +121,13 @@ function getCards() {
   return performRequest({
     token,
     path: "GET /projects/columns/{column_id}/cards",
-    inputs: _.omit(inputs, ["token"]),
+    inputs: {
+      column_id,
+      archived_state: 'all',
+      per_page: 100,
+      page: 1,
+    }
   });
-}
-
-function getIssueForCard(card) {
-  return performRequest({
-    token,
-    path: `GET ${card['content_url'].replace('https://api.github.com', '')}`,
-    inputs: _.omit(inputs, ["token"])
-  })
 }
 
 function moveCard(cards, index) {
@@ -151,7 +137,7 @@ function moveCard(cards, index) {
     inputs: {
       card_id: cards[index].id,
       position: 'bottom',
-      column_id: 8413302,
+      column_id,
     }
   }).then(_ => {
     if (index + 1 < cards.length) {
@@ -164,26 +150,48 @@ function moveCard(cards, index) {
   });
 }
 
+function sortCardLabels(labels) {
+  return _.sortBy(labels, label => {
+    const index = labels.indexOf(label);
+    if (index >= 0) {
+      return index;
+    }
+    return labels.length;
+  });
+}
+
+function sortCards(cards) {
+  return _.sortBy(cards, card => {
+    if (card.labels.length > 0) {
+      const sortedLabels = sortCardLabels(card.labels);
+      const index = order.indexOf(sortedLabels[0]);
+      if (index >= 0) {
+        return index;
+      }
+      return order.length;
+    } else {
+      return order.length;
+    }
+  });
+}
+
 function rearrangeCards() {
   getCards().then(result => {
     if (result && result['data']) {
       const promises = result['data'].filter(card => {
         return card['content_url'] != null;
       }).map(card => {
-        return getIssueForCard(card).then(issue => {
+        return performRequest({
+          token,
+          path: `GET ${card['content_url'].replace('https://api.github.com', '')}`,
+        }).then(issue => {
           card.labels = issue['data']['labels'].map(label => label.name);
           return card;
         });
       });
 
       Promise.all(promises).then(cards => {
-        moveCard(_.sortBy(cards, card => {
-          if (card.labels.length > 0) {
-            return order.indexOf(card.labels[0])
-          } else {
-            return order.length;
-          }
-        }), 0);
+        moveCard(sortCards(cards), 0);
       }).catch(error => {
         core.setFailed(error.message);
       });
