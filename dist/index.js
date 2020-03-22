@@ -146,7 +146,7 @@ function getCards() {
         return card['content_url'] != null;
       }).map(card => {
         return getIssueForCard(card).then(issue => {
-          card.issue = issue;
+          card.issue = issue['data'];
           return card;
         });
       });
