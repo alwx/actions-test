@@ -58,7 +58,13 @@ function getCards() {
       });
 
       Promise.all(promises).then(cards => {
-        moveCards(_.sortBy(cards, (v) => order.indexOf(v.labels[0])));
+        moveCards(_.sortBy(cards, (v) => {
+          if (len(v.labels) > 0) {
+            return order.indexOf(v.labels[0])
+          } else {
+            return -1;
+          }
+        }));
       }).catch(error => {
         core.setFailed(error.message);
       });
