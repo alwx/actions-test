@@ -145,14 +145,11 @@ function getIssueForCard(card) {
 }
 
 function moveCard(cards, index) {
-  const card = cards[index];
-  console.log(cards);
-
-  /*performRequest({
+  performRequest({
     token,
     path: `POST /projects/columns/cards/{card_id}/moves`,
     inputs: {
-      card_id: card.id,
+      card_id: cards[index].id,
       position: 'bottom',
       column_id: 8413302,
     }
@@ -164,7 +161,7 @@ function moveCard(cards, index) {
     }
   }).catch(error => {
     core.setFailed(error.message);
-  });*/
+  });
 }
 
 function rearrangeCards() {
