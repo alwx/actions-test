@@ -157,9 +157,9 @@ function getCards() {
       });
 
       Promise.all(promises).then(cards => {
-        moveCards(_.sortBy(cards, (v) => {
-          if (v.labels.length > 0) {
-            return order.indexOf(v.labels[0])
+        moveCards(_.sortBy(cards, card => {
+          if (card.labels.length > 0) {
+            return order.indexOf(card.labels[0])
           } else {
             return -1;
           }

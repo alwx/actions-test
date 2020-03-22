@@ -21,6 +21,10 @@ inputs:
     description: |
       Page number of the results to fetch.
     required: true
+  order:
+    description: |
+      the right order
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
