@@ -1,5 +1,5 @@
 name: 'Issue Prioritizer'
-description: 'Prioritizes issue in some column'
+description: 'Prioritizes issues in a specified column.'
 inputs:
   token:
     description: |
@@ -9,21 +9,9 @@ inputs:
     description: |
       column_id parameter
     required: true
-  archived_state:
-    description: |
-      Filters the project cards that are returned by the card's state. Can be one of `all`,`archived`, or `not_archived`.
-    required: true
-  per_page:
-    description: |
-      Results per page (max 100)
-    required: true
-  page:
-    description: |
-      Page number of the results to fetch.
-    required: true
   order:
     description: |
-      the right order
+      The right order of labels separated with commas (for example, `priority:critical,priority:high,priority:low`)
     required: true
 runs:
   using: 'node12'

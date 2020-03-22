@@ -14,10 +14,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           column_id: 8413302
-          archived_state: all
-          per_page: 100
-          page: 1
           order: priority:important,priority:high,priority:medium,priority:low
-      - name: Print outputs
-        run: |
-          echo "yay"
