@@ -1,13 +1,26 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Issue Prioritizer'
+description: 'Prioritizes issue in some column'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  token:
+    description: |
+      Token to authenticate the request
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  column_id:
+    description: |
+      column_id parameter
+    required: true
+  archived_state:
+    description: |
+      Filters the project cards that are returned by the card's state. Can be one of `all`,`archived`, or `not_archived`.
+    required: true
+  per_page:
+    description: |
+      Results per page (max 100)
+    required: true
+  page:
+    description: |
+      Page number of the results to fetch.
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
