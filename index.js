@@ -45,7 +45,7 @@ function moveCards(cards) {
       inputs: {
         card_id: card.id,
         position: 'bottom',
-        column_id: column_id,
+        column_id: 8413302,
       }
     })
   });
