@@ -29,6 +29,14 @@ async function performRequest({token, path, inputs}) {
   return await requestWithAuth(path, inputs);
 }
 
+function getCards() {
+  return performRequest({
+    token,
+    path: "GET /projects/columns/{column_id}/cards",
+    inputs: _.omit(inputs, ["token"]),
+  });
+}
+
 function getIssueForCard(card) {
   return performRequest({
     token,
@@ -37,32 +45,30 @@ function getIssueForCard(card) {
   })
 }
 
-function moveCards(cards) {
-  const promises = cards.map(card => {
-    return performRequest({
-      token,
-      path: `POST /projects/columns/cards/{card_id}/moves`,
-      inputs: {
-        card_id: card.id,
-        position: 'bottom',
-        column_id: 8413302,
-      }
-    })
-  });
+function moveCard(cards, index) {
+  const card = cards[index];
 
-  Promise.all(promises).then(result => {
-    console.log(result);
+  performRequest({
+    token,
+    path: `POST /projects/columns/cards/{card_id}/moves`,
+    inputs: {
+      card_id: card.id,
+      position: 'bottom',
+      column_id: 8413302,
+    }
+  }).then(_ => {
+    if (index + 1 < cards.length) {
+      moveCard(cards, index + 1);
+    } else {
+      console.log("done!");
+    }
   }).catch(error => {
     core.setFailed(error.message);
   });
 }
 
-function getCards() {
-  performRequest({
-    token,
-    path: "GET /projects/columns/{column_id}/cards",
-    inputs: _.omit(inputs, ["token"]),
-  }).then(result => {
+function rearrangeCards() {
+  getCards().then(result => {
     if (result && result['data']) {
       const promises = result['data'].filter(card => {
         return card['content_url'] != null;
@@ -74,13 +80,13 @@ function getCards() {
       });
 
       Promise.all(promises).then(cards => {
-        moveCards(_.sortBy(cards, card => {
+        moveCard(_.sortBy(cards, card => {
           if (card.labels.length > 0) {
             return order.indexOf(card.labels[0])
           } else {
             return order.length;
           }
-        }));
+        }), 0);
       }).catch(error => {
         core.setFailed(error.message);
       });
@@ -90,4 +96,4 @@ function getCards() {
   });
 }
 
-getCards();
+rearrangeCards();
