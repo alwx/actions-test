@@ -52,8 +52,7 @@ function getCards() {
         return card['content_url'] != null;
       }).map(card => {
         return getIssueForCard(card).then(issue => {
-          console.log(issue['data']['labels']);
-          card.labels = issue['data']['labels'];
+          card.labels = issue['data']['labels'].map(label => label.name);
           return card;
         });
       });
