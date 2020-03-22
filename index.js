@@ -28,6 +28,14 @@ async function performRequest({token, path, inputs}) {
   return await requestWithAuth(path, inputs);
 }
 
+function getIssueForCard(card) {
+  return performRequest({
+    token,
+    path: `GET ${card['content_url'].replace('https://api.github.com', '')}`,
+    inputs: _.omit(inputs, ["token"]),
+  })
+}
+
 function getCards() {
   performRequest({
     token,
@@ -35,7 +43,20 @@ function getCards() {
     inputs: _.omit(inputs, ["token"]),
   }).then(result => {
     if (result && result['data']) {
-      console.log(result['data']);
+      const promises = result['data'].filter(card => {
+        return card['content_url'] != null;
+      }).map(card => {
+        return getIssueForCard(card).then(issue => {
+          card.issue = issue;
+          return card;
+        });
+      });
+
+      Promise.all(promises).then(results => {
+        console.log(results);
+      }).catch(e => {
+        console.error(e);
+      });
     }
   }).catch(error => {
     core.setFailed(error.message);
