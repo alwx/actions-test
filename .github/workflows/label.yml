@@ -5,7 +5,10 @@ on:
 
 jobs:
   do_the_job:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Execute `uname -a`
         run: uname -a
