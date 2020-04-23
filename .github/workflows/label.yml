@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: rasaHQ/issue-prioritizer@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          column_id: 8413302
-          order: priority:important,priority:high,priority:medium,priority:low
+      - name: Echo uname
+        run: uname -a
+
