@@ -6,7 +6,7 @@
   "author": "alwx <alwxndr@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.3",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^2.1.1",
     "@octokit/request": "^5.3.2",
     "lodash": "^4.17.15"
